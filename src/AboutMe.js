@@ -1,32 +1,45 @@
-import React from 'react';
-import { Segment, Card, Image, Container, Grid } from 'semantic-ui-react';
+import React, { createRef } from 'react';
+import { CareerList } from './Careers';
+import { Segment, Card, Image, Container, Grid, Rail, Header, Icon, Label, Button, Sticky, Ref } from 'semantic-ui-react';
 
 
 function AboutMe() {
+    const contextRef = createRef();
     return (
-        <Grid>
-            <Grid.Row columns={2} width={10} verticalAlign="bottom">
-                <Grid.Column>
-                    <Card>
-                        <Image src='matthew.png' />
-                        <Card.Content>
-                            <Card.Header>Doowoong Lee (David Lee)</Card.Header>
-                            <Card.Description>
-                                Software Engineer,
-                    </Card.Description>
-                        </Card.Content>
-                    </Card>
-                    <Container>
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                    </Container>
-                </Grid.Column>
-                <Grid.Column width={5}>
-                   
-                </Grid.Column>
-            </Grid.Row>
-
+        <Grid centered columns={2}>
+            <Grid.Column>
+                <Ref innerRef={contextRef}>
+                    <Segment basic>
+                        <CareerList />
+                        <Rail close position="left">
+                            <Sticky context={contextRef}>
+                                <Card>
+                                    <Image src="matthew.png" />
+                                    <Card.Content>
+                                        <Card.Header>
+                                            Doowoong Lee (David Lee)
+                                </Card.Header>
+                                        <Card.Description>
+                                            I'm David, a passionate software engineer and open-source advocate. in my spare time, I enjoy writing program that fullfils my interest at a time and sharing them through open source platform (e.g. github) if you are interested in my projects, check my github profile below.
+                                </Card.Description>
+                                        <Label ribbon basic>
+                                            <a href='https://github.com/fritzprix'>
+                                                <Icon name='github' size='big' />
+                                            </a>
+                                            <a href='https://kr.linkedin.com/in/david-lee-7630b6146'>
+                                                <Icon name='linkedin' color='blue' size='big' />
+                                            </a>
+                                        </Label>
+                                    </Card.Content>
+                                </Card>
+                            </Sticky>
+                        </Rail>
+                    </Segment>
+                </Ref>
+            </Grid.Column>
 
         </Grid>
+
     );
 }
 

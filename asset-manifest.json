@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.js": "/static/js/main.f5006efc.chunk.js",
-    "main.js.map": "/static/js/main.f5006efc.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.8fa5f3e7.js",
-    "runtime-main.js.map": "/static/js/runtime-main.8fa5f3e7.js.map",
-    "static/css/2.c4b83ee6.chunk.css": "/static/css/2.c4b83ee6.chunk.css",
-    "static/js/2.271a5401.chunk.js": "/static/js/2.271a5401.chunk.js",
-    "static/js/2.271a5401.chunk.js.map": "/static/js/2.271a5401.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.ac15ec6924b30505f40c85e766f637b8.js": "/precache-manifest.ac15ec6924b30505f40c85e766f637b8.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.c4b83ee6.chunk.css.map": "/static/css/2.c4b83ee6.chunk.css.map",
-    "static/js/2.271a5401.chunk.js.LICENSE": "/static/js/2.271a5401.chunk.js.LICENSE",
-    "static/media/semantic.min.css": "/static/media/outline-icons.ef60a4f6.woff"
+    "main.js": "/fritzprix.github.io/static/js/main.f5006efc.chunk.js",
+    "main.js.map": "/fritzprix.github.io/static/js/main.f5006efc.chunk.js.map",
+    "runtime-main.js": "/fritzprix.github.io/static/js/runtime-main.e751bae5.js",
+    "runtime-main.js.map": "/fritzprix.github.io/static/js/runtime-main.e751bae5.js.map",
+    "static/css/2.9809f74a.chunk.css": "/fritzprix.github.io/static/css/2.9809f74a.chunk.css",
+    "static/js/2.271a5401.chunk.js": "/fritzprix.github.io/static/js/2.271a5401.chunk.js",
+    "static/js/2.271a5401.chunk.js.map": "/fritzprix.github.io/static/js/2.271a5401.chunk.js.map",
+    "index.html": "/fritzprix.github.io/index.html",
+    "precache-manifest.8c32eb636ae5eba9d5a5cae8686b58ae.js": "/fritzprix.github.io/precache-manifest.8c32eb636ae5eba9d5a5cae8686b58ae.js",
+    "service-worker.js": "/fritzprix.github.io/service-worker.js",
+    "static/css/2.9809f74a.chunk.css.map": "/fritzprix.github.io/static/css/2.9809f74a.chunk.css.map",
+    "static/js/2.271a5401.chunk.js.LICENSE": "/fritzprix.github.io/static/js/2.271a5401.chunk.js.LICENSE",
+    "static/media/semantic.min.css": "/fritzprix.github.io/static/media/outline-icons.ef60a4f6.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.8fa5f3e7.js",
-    "static/css/2.c4b83ee6.chunk.css",
+    "static/js/runtime-main.e751bae5.js",
+    "static/css/2.9809f74a.chunk.css",
     "static/js/2.271a5401.chunk.js",
     "static/js/main.f5006efc.chunk.js"
   ]

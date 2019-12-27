@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Segment, Container, Embed, Header, Placeholder } from "semantic-ui-react";
+import { Segment, Container, Embed, Header, Placeholder, Divider, Label } from "semantic-ui-react";
 
 import Axios, { CancelToken } from 'axios';
 import res from './TestRes';
@@ -28,8 +28,16 @@ function CareerItem({ id }) {
                         {item.title}
                     </Header>
                     {item.media && <Embed {...item.media} autoplay={true} />}
-                    <Container>
-                        {item.description}
+                    <Divider/>
+                        {item.tags && item.tags.map((tag,i) => <Label key={i} circular basic size="mini">#{tag}</Label>)}
+                    <Divider/>
+                    <Container text fluid>
+                        <Header as='h4'>
+                            {item.summary}
+                        </Header>
+                        <p>
+                            {item.description}
+                        </p>
                     </Container>
                 </Segment>
             ) : (
@@ -47,7 +55,12 @@ function CareerList() {
     return (
         <Segment basic>
             {items && items.map((id, i) => {
-                return <CareerItem key={i} id={id} />;
+                return (
+                    <div key={i}>
+                        <CareerItem id={id} />
+                        <br/>
+                    </div>
+                );
             })}
         </Segment>
     );

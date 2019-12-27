@@ -1,16 +1,80 @@
-import React, { createRef } from 'react';
+import React, { createRef, useState, useEffect } from 'react';
 import {
     BrowserView,
     MobileView
 } from 'react-device-detect';
 import { CareerList } from './Careers';
-import { Segment, Card, Image, Container, Grid, Rail, Header, Icon, Label, Button, Sticky, Ref } from 'semantic-ui-react';
+import { Segment, Card, Image, Grid, Rail, Icon, Label, Sticky, Ref, Placeholder, Divider } from 'semantic-ui-react';
+import Axios, { CancelToken } from 'axios';
 
-function AboutMe() {
+function SocialBadge({ social }) {
+    return (
+        <div>
+            {(social && social.length > 0) && (
+                <Label ribbon basic>
+                    {social.map(({ type, url, color }, i) => {
+                        return (
+                            <a key={i} href={url}>
+                                <Icon name={type} size="big" color={color} />
+                            </a>
+                        );
+                    })}
+                </Label>
+            )}
+        </div>
+    );
+}
+
+function MobileAboutMe({ intro }) {
     const contextRef = createRef();
     return (
         <div>
-            <BrowserView>
+            {intro ? (
+                <Ref innerRef={contextRef}>
+                    <Segment>
+                        <Sticky context={contextRef}>
+                            <SocialBadge social={intro.social} />
+                        </Sticky>
+                        <Card centered>
+                            <Image src={intro.photo} />
+                            <Card.Content>
+                                <Card.Header>
+                                    {intro.name} ({intro.gbName})
+                            </Card.Header>
+                                <Card.Description>
+                                    {intro.whoim}
+                                </Card.Description>
+                                <Card.Meta>
+                                    {intro.tags && (
+                                        <div>
+                                            <Divider />
+                                            {intro.tags.map((tag, idx) => <Label key={idx} basic circular>#{tag}</Label>)}
+                                            <Divider />
+                                        </div>
+                                    )}
+                                </Card.Meta>
+                            </Card.Content>
+                        </Card>
+                        <CareerList />
+                    </Segment>
+                </Ref>
+            ) : (
+                    <Placeholder>
+                        <Placeholder.Image />
+                        <Placeholder.Line />
+                        <Placeholder.Line />
+                        <Placeholder.Line />
+                    </Placeholder>
+                )}
+        </div>
+    );
+}
+
+function BrowserAbountMe({ intro }) {
+    const contextRef = createRef();
+    return (
+        <div>
+            {intro ? (
                 <Grid centered columns={2}>
                     <Grid.Column>
                         <Ref innerRef={contextRef}>
@@ -19,22 +83,24 @@ function AboutMe() {
                                 <Rail close position="left">
                                     <Sticky context={contextRef}>
                                         <Card centered>
-                                            <Image src="matthew.png" />
+                                            <Image src={intro.photo} />
                                             <Card.Content>
                                                 <Card.Header>
-                                                    Doowoong Lee (David Lee)
-                                        </Card.Header>
+                                                    {intro.name} ({intro.gbName})
+                                                </Card.Header>
                                                 <Card.Description>
-                                                    I'm David, a passionate software engineer and open-source advocate. I enjoy writing program that fullfils my interest in spare time, and sharing them through open source platform. (e.g. github) if you feel like to check my projects, check my github profile below.
-                                        </Card.Description>
-                                                <Label ribbon basic>
-                                                    <a href='https://github.com/fritzprix'>
-                                                        <Icon name='github' size='big' />
-                                                    </a>
-                                                    <a href='https://kr.linkedin.com/in/david-lee-7630b6146'>
-                                                        <Icon name='linkedin' color='blue' size='big' />
-                                                    </a>
-                                                </Label>
+                                                    {intro.whoim}
+                                                </Card.Description>
+                                                <Card.Meta>
+                                                    {intro.tags && (
+                                                        <div>
+                                                            <Divider />
+                                                            {intro.tags.map((tag, idx) => <Label key={idx} basic circular>#{tag}</Label>)}
+                                                            <Divider />
+                                                        </div>
+                                                    )}
+                                                </Card.Meta>
+                                                <SocialBadge social={intro.social} />
                                             </Card.Content>
                                         </Card>
                                     </Sticky>
@@ -43,31 +109,40 @@ function AboutMe() {
                         </Ref>
                     </Grid.Column>
                 </Grid>
+            ) : (
+                    <Placeholder>
+                        <Placeholder.Image />
+                        <Placeholder.Line />
+                        <Placeholder.Line />
+                        <Placeholder.Line />
+                    </Placeholder>
+                )}
+        </div>
+    );
+}
+
+function AboutMe() {
+    const [intro, setIntro] = useState(undefined);
+    const source = CancelToken.source();
+    useEffect(() => {
+        Axios.get(`${document.location}/intro.json`, {
+            cancelToken: source.token
+        }).then(({ status, data }) => {
+            if (status === 200) {
+                setIntro(data);
+            }
+        }).catch(err => {
+            // request canceled
+        })
+        return () => source.cancel('');
+    }, [])
+    return (
+        <div>
+            <BrowserView>
+                <BrowserAbountMe intro={intro} />
             </BrowserView>
             <MobileView>
-                <Segment>
-                    <Card centered>
-                        <Image src="matthew.png" />
-                        <Card.Content>
-                            <Card.Header>
-                                Doowoong Lee (David Lee)
-                                        </Card.Header>
-                            <Card.Description>
-                                I'm David, a passionate software engineer and open-source advocate. I enjoy writing program that fullfils my interest in spare time, and sharing them through open source platform. (e.g. github) if you feel like to check my projects, check my github profile below.
-                                        </Card.Description>
-                            <Label ribbon basic>
-                                <a href='https://github.com/fritzprix'>
-                                    <Icon name='github' size='big' />
-                                </a>
-                                <a href='https://kr.linkedin.com/in/david-lee-7630b6146'>
-                                    <Icon name='linkedin' color='blue' size='big' />
-                                </a>
-                            </Label>
-                        </Card.Content>
-                    </Card>
-                    <CareerList />
-                </Segment>
-
+                <MobileAboutMe intro={intro} />
             </MobileView>
         </div>
 

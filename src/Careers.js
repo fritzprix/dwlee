@@ -4,7 +4,6 @@ import { Segment, Container, Embed, Header, Placeholder, Divider, Label, Card, A
 import ReactMarkdown from "react-markdown";
 
 import Axios, { CancelToken } from 'axios';
-import res from './TestRes';
 
 function OpenSourceBanner({ project }) {
     return (
@@ -19,25 +18,35 @@ function OpenSourceBanner({ project }) {
     );
 }
 
-function CareerItem({ id }) {
+function CareerItem({ path }) {
     const [item, setItem] = useState(undefined);
     const [showBackgroundStory, setShowBackgroundStory] = useState(false);
     const [markdown, setMarkdown] = useState(undefined);
+    const [detail, setDetail] = useState(undefined);
     const source = CancelToken.source();
     useEffect(() => {
-        Axios.get(`https://raw.githubusercontent.com/fritzprix/dwlee/master/public/career_${id}.json`, {
+        Axios.get(`https://raw.githubusercontent.com/dwidlee/article/master/prjs/${path}/index.json`, {
             cancelToken: source.token
         }).then(({ status, data }) => {
             if (status === 200) {
                 setItem(data);
-                if (data.markdown) {
-                    Axios.get(data.markdown, {
+                if (data.detail) {
+                    Axios.get(`https://raw.githubusercontent.com/dwidlee/article/master/prjs/${path}/${data.detail}`, {
+                        cancelToken: source.token
+                    }).then(({ status, data }) => {
+                        if (status === 200) {
+                            setDetail(data);
+                        }
+                    }).catch(ignored => { });
+                }
+                if (data.summary) {
+                    Axios.get(`https://raw.githubusercontent.com/dwidlee/article/master/prjs/${path}/${data.summary}`, {
                         cancelToken: source.token
                     }).then(({ status, data }) => {
                         if (status === 200) {
                             setMarkdown(data);
                         }
-                    })
+                    }).catch(ignored => { });
                 }
             }
         }).catch(err => {
@@ -68,7 +77,7 @@ function CareerItem({ id }) {
                     <Divider />
                     <Container text fluid>
                         <Header as='h4'>
-                            {item.summary}
+                            {item.description}
                         </Header>
                         <Accordion>
                             <Accordion.Title onClick={() => setShowBackgroundStory(!showBackgroundStory)}>
@@ -77,7 +86,7 @@ function CareerItem({ id }) {
                             </Accordion.Title>
                             <Accordion.Content active={showBackgroundStory}>
                                 <p>
-                                    {item.description}
+                                    {detail}
                                 </p>
                             </Accordion.Content>
                         </Accordion>
@@ -102,13 +111,27 @@ function CareerItem({ id }) {
 }
 
 function CareerList() {
-    const items = res.items;
+    const [careers, setCareers] = useState(undefined);
+    const source = CancelToken.source();
+    useEffect(() => {
+        Axios.get(`https://raw.githubusercontent.com/dwidlee/article/master/prjs/index.json`, {
+            cancelToken: source.token
+        }).then(({ status, data }) => {
+            if (status === 200) {
+                setCareers(data.items);
+            }
+        }).catch(err => {
+
+        });
+
+        return () => source.cancel('');
+    }, []);
     return (
         <div>
-            {items && items.map((id, i) => {
+            {careers && careers.map((career, i) => {
                 return (
                     <LazyLoad key={i} height={500}>
-                        <CareerItem id={id} />
+                        <CareerItem path={career} />
                         <br />
                     </LazyLoad>
                 );

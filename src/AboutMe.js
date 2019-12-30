@@ -125,7 +125,7 @@ function AboutMe() {
     const [intro, setIntro] = useState(undefined);
     const source = CancelToken.source();
     useEffect(() => {
-        Axios.get(`${document.location}/intro.json`, {
+        Axios.get(`https://raw.githubusercontent.com/fritzprix/dwlee/master/public/intro.json`, {
             cancelToken: source.token
         }).then(({ status, data }) => {
             if (status === 200) {

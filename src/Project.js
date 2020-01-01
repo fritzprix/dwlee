@@ -2,14 +2,20 @@ import React, { useEffect, useState } from 'react';
 import LazyLoad from 'react-lazyload';
 import { Segment, Container, Embed, Header, Placeholder, Divider, Label, Card, Accordion, Icon } from "semantic-ui-react";
 import ReactMarkdown from "react-markdown";
-
 import Axios, { CancelToken } from 'axios';
+import ReactGA from 'react-ga';
 
 function OpenSourceBanner({ project }) {
     return (
         <>
             {project && (
-                <Label href={project.url} basic attached="top">
+                <Label href={project.url} basic attached="top" onClick={() => {
+                    ReactGA.event({
+                        category:'User',
+                        action:'View Github',
+                        label:project.name
+                    });
+                }}>
                     <Icon name={project.type} size="large" />
                     {project.name}
                 </Label>
@@ -18,7 +24,7 @@ function OpenSourceBanner({ project }) {
     );
 }
 
-function CareerItem({ path }) {
+function ProjectItem({ path }) {
     const [item, setItem] = useState(undefined);
     const [showBackgroundStory, setShowBackgroundStory] = useState(false);
     const [markdown, setMarkdown] = useState(undefined);
@@ -30,6 +36,7 @@ function CareerItem({ path }) {
         }).then(({ status, data }) => {
             if (status === 200) {
                 setItem(data);
+                ReactGA.pageview(`/project/${path}`);
                 if (data.detail) {
                     Axios.get(`https://raw.githubusercontent.com/dwidlee/article/master/prjs/${path}/${data.detail}`, {
                         cancelToken: source.token
@@ -64,6 +71,12 @@ function CareerItem({ path }) {
                     <Header>
                         {item.title}
                     </Header>
+                    <Container text fluid>
+                        <Header as='h4'>
+                            {item.description}
+                        </Header>
+                    </Container>
+                    <Divider />
                     {item.media && <Embed {...item.media} autoplay={true} />}
                     {markdown && (
                         <ReactMarkdown>
@@ -74,23 +87,27 @@ function CareerItem({ path }) {
                     <Card.Meta>
                         {item.tags && item.tags.map((tag, i) => <Label key={i} circular basic size="mini">#{tag}</Label>)}
                     </Card.Meta>
-                    <Divider />
-                    <Container text fluid>
-                        <Header as='h4'>
-                            {item.description}
-                        </Header>
-                        <Accordion>
-                            <Accordion.Title onClick={() => setShowBackgroundStory(!showBackgroundStory)}>
-                                <Icon name='angle down' />
-                                long story
+                    <Accordion>
+                        <Accordion.Title onClick={() => {
+                            if (!showBackgroundStory) {
+                                ReactGA.event({
+                                    category:'User',
+                                    action:'view detail',
+                                    label:path
+                                });
+                            }
+                            setShowBackgroundStory(!showBackgroundStory);
+
+                        }}>
+                            <Icon name='angle down' />
+                            More
                             </Accordion.Title>
-                            <Accordion.Content active={showBackgroundStory}>
-                                <p>
-                                    {detail}
-                                </p>
-                            </Accordion.Content>
-                        </Accordion>
-                    </Container>
+                        <Accordion.Content active={showBackgroundStory}>
+                            <p>
+                                {detail}
+                            </p>
+                        </Accordion.Content>
+                    </Accordion>
                 </Segment>
             ) : (
                     <Placeholder>
@@ -110,7 +127,7 @@ function CareerItem({ path }) {
     );
 }
 
-function CareerList() {
+function ProjectList() {
     const [careers, setCareers] = useState(undefined);
     const source = CancelToken.source();
     useEffect(() => {
@@ -118,6 +135,7 @@ function CareerList() {
             cancelToken: source.token
         }).then(({ status, data }) => {
             if (status === 200) {
+                ReactGA.pageview('/project');
                 setCareers(data.items);
             }
         }).catch(err => {
@@ -131,7 +149,7 @@ function CareerList() {
             {careers && careers.map((career, i) => {
                 return (
                     <LazyLoad key={i} height={500}>
-                        <CareerItem path={career} />
+                        <ProjectItem path={career} />
                         <br />
                     </LazyLoad>
                 );
@@ -140,4 +158,4 @@ function CareerList() {
     );
 }
 
-export { CareerList };
+export { ProjectList };
